@@ -14,7 +14,7 @@ type Rfw struct {
 }
 
 func generatePath(basepath string, t time.Time) string {
-	return fmt.Sprintf("%s-%4d%2d%2d-00", basepath, t.Year(), t.Month(), t.Day())
+	return fmt.Sprintf("%s-%4d%02d%02d-00", basepath, t.Year(), t.Month(), t.Day())
 }
 
 func New(basepath string) (*Rfw, error) {
