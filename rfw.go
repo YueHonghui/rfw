@@ -36,10 +36,10 @@ func (w *Rfw) Write(p []byte) (int, error) {
 		return 0, errors.New(fmt.Sprintf("Rfw is closed. Basepath=%s", w.Basepath))
 	}
 	t := time.Now()
-	if t.Day() != w.LastTime.Day() {
+	if t.YearDay() != w.LastTime.YearDay() || t.Year() != w.LastTime.Year() {
 		w.lock.RUnlock()
 		w.lock.Lock()
-		if t.Day() != w.LastTime.Day() {
+		if t.YearDay() != w.LastTime.YearDay() || t.Year() != w.LastTime.Year() {
 			path := generatePath(w.Basepath, t)
 			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0664)
 			if err != nil {
@@ -49,12 +49,12 @@ func (w *Rfw) Write(p []byte) (int, error) {
 			}
 			w.OutFile.Close()
 			w.OutFile = f
+			w.LastTime = t
 		}
 		w.lock.Unlock()
 		w.lock.RLock()
 	}
-	n, err := w.OutFile.Write(p)
-	return n, err
+	return w.OutFile.Write(p)
 }
 
 func (w *Rfw) Close() (err error) {
