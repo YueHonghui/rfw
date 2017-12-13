@@ -87,9 +87,11 @@ func (w *Rfw) Write(p []byte) (int, error) {
 	}
 	t := time.Now()
 	if t.YearDay() != w.lastTime.YearDay() || t.Year() != w.lastTime.Year() {
+		needcheck := false
 		w.lock.RUnlock()
 		w.lock.Lock()
 		if t.YearDay() != w.lastTime.YearDay() || t.Year() != w.lastTime.Year() {
+			needcheck = true
 			path := generatePath(w.basepath, t)
 			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0664)
 			if err != nil {
@@ -100,10 +102,12 @@ func (w *Rfw) Write(p []byte) (int, error) {
 			w.outFile.Close()
 			w.outFile = f
 			w.lastTime = t
-			w.checkClearLogFile(t)
 		}
 		w.lock.Unlock()
 		w.lock.RLock()
+		if needcheck {
+			w.checkClearLogFile(t)
+		}
 	}
 	return w.outFile.Write(p)
 }
