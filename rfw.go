@@ -68,7 +68,7 @@ func (w *Rfw) checkClearLogFile(now time.Time) error {
 	if w.remainCntOfLogFile <= 0 {
 		return nil
 	}
-	matches, err := filepath.Glob(w.basepath + "-")
+	matches, err := filepath.Glob(w.basepath + "-*")
 	if err != nil {
 		return err
 	}
