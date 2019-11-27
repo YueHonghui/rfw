@@ -1,4 +1,6 @@
 rfw(simple rotate file writer)
+
+Warning: this project has been moved to https://github.com/gokits/rfw .
 ===
 ## What is rfw
 Package rfw is a simple rotate file writer that can rotate file dayly and be configured how many rotated files to remain. It implements `io.WriteCloser` and can be used with many logger package easyly.
